@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "NodeNext",
+        "moduleResolution": "nodenext",
+        "esModuleInterop": true,
+        "sourceMap": true,
+        "outDir": "dist",
+        "typeRoots": ["node_modules/@types","@types"],
+        "strict": true
+    },
+    "include": ["./src/**/*","./@types/session.d.ts"],
+    "ts-node": {"files": true}
+}
