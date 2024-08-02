@@ -11,6 +11,7 @@
     "dev": "concurrently \"tsc --watch\" \"nodemon dist/index.js\"",
     "start":"node dist/index.js"
   },
+  "packageManager": "pnpm@<9.6.0>",
   "keywords": [],
   "author": "",
   "license": "ISC",
