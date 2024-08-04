@@ -4,11 +4,12 @@
         "module": "NodeNext",
         "moduleResolution": "nodenext",
         "esModuleInterop": true,
+        "resolveJsonModule": true,
         "sourceMap": true,
         "outDir": "dist",
         "typeRoots": ["node_modules/@types","@types"],
         "strict": true
     },
-    "include": ["./src/**/*","./@types/session.d.ts"],
+    "include": ["./src/**/*","./@types/session.d.ts","./src/documentation/**/*"],
     "ts-node": {"files": true}
 }

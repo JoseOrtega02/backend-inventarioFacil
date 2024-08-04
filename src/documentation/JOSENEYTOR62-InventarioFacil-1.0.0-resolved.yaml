@@ -1,0 +1,892 @@
+openapi: 3.0.0
+info:
+  title: InventarioFacil
+  description: Api for the stock managment of any bussines
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/JOSENEYTOR62/InventarioFacil/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: https://backend--inventariofacilapi--lx6wgxd6vj66.code.run
+  description: Base Server Hosted in northflank.
+paths:
+  /user:
+    get:
+      tags:
+      - User
+      summary: Returns a user by ID
+      description: Manage all matters with users
+      parameters:
+      - name: userId
+        in: query
+        description: The ID of the user to return
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: x-csrf-token
+        in: header
+        description: CSRF token validation
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The user info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: An unknown error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /user/register:
+    post:
+      tags:
+      - User
+      summary: Register a new user
+      parameters:
+      - name: x-csrf-token
+        in: header
+        description: CSRF token validation
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewUser'
+        required: true
+      responses:
+        "201":
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: Parameters missing or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "409":
+          description: Username or email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /user/login:
+    post:
+      tags:
+      - User
+      summary: User login
+      description: Log in a user with username and password
+      parameters:
+      - name: x-csrf-token
+        in: header
+        description: CSRF token validation
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
+      responses:
+        "201":
+          description: Log in successful
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Log in successful
+        "400":
+          description: Parameters missing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /user/logout:
+    post:
+      tags:
+      - User
+      summary: User logout
+      description: Log out the current user
+      parameters:
+      - name: x-csrf-token
+        in: header
+        description: CSRF token validation
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successfully logged out
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Successfully logged out
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /table/create:
+    post:
+      tags:
+      - Table
+      summary: Create a new table
+      description: Create a new table for the logged-in user
+      parameters:
+      - name: x-csrf-token
+        in: header
+        description: CSRF token validation
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTableRequest'
+        required: true
+      responses:
+        "200":
+          description: Table created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Table'
+        "400":
+          description: Missing parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /table/delete:
+    delete:
+      tags:
+      - Table
+      summary: Delete a table
+      description: Delete a table for the logged-in user
+      parameters:
+      - name: x-csrf-token
+        in: header
+        description: CSRF token validation
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: tableId
+        in: query
+        description: The ID of the table to delete
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: 60d5f2ab8f8a2c0015d1f9b3
+      responses:
+        "200":
+          description: Table deleted successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Table deleted successfully
+        "400":
+          description: Missing parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Table not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /table:
+    get:
+      tags:
+      - Table
+      summary: Get tables for the logged-in user
+      description: Retrieve all tables for the logged-in user
+      parameters:
+      - name: x-csrf-token
+        in: header
+        description: CSRF token validation
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successfully retrieved tables
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Table'
+        "400":
+          description: Missing parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /table/update:
+    put:
+      tags:
+      - Table
+      summary: Update a table
+      description: Update the details of a table for the logged-in user
+      parameters:
+      - name: x-csrf-token
+        in: header
+        description: CSRF token validation
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTableRequest'
+        required: true
+      responses:
+        "200":
+          description: Table updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Table'
+        "400":
+          description: Missing parameters or invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Table not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /table/item:
+    get:
+      tags:
+      - Table
+      summary: Get items from a table
+      description: Retrieve all items from a specific table by its ID.
+      parameters:
+      - name: x-csrf-token
+        in: header
+        description: CSRF token validation
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: tableId
+        in: query
+        description: The ID of the table from which to retrieve items
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: 60d5f2ab8f8a2c0015d1f9b4
+      responses:
+        "200":
+          description: Successfully retrieved items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TableResponse'
+        "400":
+          description: "Bad Request, invalid input"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Table not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+      - Table
+      summary: Update an item in a table
+      description: Update the details of a specific item in a table.
+      parameters:
+      - name: x-csrf-token
+        in: header
+        description: CSRF token validation
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateItemRequest'
+        required: true
+      responses:
+        "200":
+          description: Item updated successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Item updated successfully
+        "400":
+          description: "Bad Request, invalid input"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Table or item not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - Table
+      summary: Add items to a table
+      description: "Add new items to a specific table, ensuring the total does not exceed the limit."
+      parameters:
+      - name: x-csrf-token
+        in: header
+        description: CSRF token validation
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddItemsRequest'
+        required: true
+      responses:
+        "200":
+          description: Items added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TableResponse'
+        "400":
+          description: "Bad Request, exceeding item limit or invalid input"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Table not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+      - Table
+      summary: Remove an item from a table
+      description: Remove a specific item from a table by its ID.
+      parameters:
+      - name: x-csrf-token
+        in: header
+        description: CSRF token validation
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: itemId
+        in: query
+        description: The ID of the item to remove
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: 60d5f2ab8f8a2c0015d1f9b3
+      - name: tableId
+        in: query
+        description: The ID of the table from which to remove the item
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: 60d5f2ab8f8a2c0015d1f9b4
+      responses:
+        "200":
+          description: Item removed successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Item removed successfully
+        "400":
+          description: "Bad Request, invalid input"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Table or item not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /sale:
+    get:
+      tags:
+      - Sale
+      summary: Retrieve sales for a user
+      description: Get the total sales for a specific user by their user ID.
+      parameters:
+      - name: x-csrf-token
+        in: header
+        description: CSRF token validation
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: userId
+        in: query
+        description: The ID of the user for whom to retrieve sales
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: 60d5f2ab8f8a2c0015d1f9b6
+      responses:
+        "200":
+          description: Sales retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesResponse'
+        "404":
+          description: Sales not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - Sale
+      summary: Process a sale
+      description: "Process a sale by validating sale items, calculating the total amount, and saving the sale."
+      parameters:
+      - name: x-csrf-token
+        in: header
+        description: CSRF token validation
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaleRequest'
+        required: true
+      responses:
+        "200":
+          description: Sale updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: "Bad Request, invalid input"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Sale not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+      - Sale
+      summary: Delete sales for a user
+      description: Delete all sales records for a specific user by their user ID.
+      parameters:
+      - name: x-csrf-token
+        in: header
+        description: CSRF token validation
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: userId
+        in: query
+        description: The ID of the user whose sales records should be deleted
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: 60d5f2ab8f8a2c0015d1f9b6
+      responses:
+        "200":
+          description: Sales deleted successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Sales deleted successfully
+        "404":
+          description: Sales not found or user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        userId:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    NewUser:
+      required:
+      - email
+      - password
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+        email:
+          type: string
+    Login:
+      required:
+      - password
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+    Table:
+      type: object
+      properties:
+        tableId:
+          type: string
+        userId:
+          type: string
+        title:
+          type: string
+        items:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CreateTableRequest:
+      required:
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+    UpdateTableRequest:
+      required:
+      - tableId
+      - title
+      type: object
+      properties:
+        tableId:
+          type: string
+        title:
+          type: string
+    Item:
+      type: object
+      properties:
+        name:
+          type: string
+          example: ItemName
+        stock:
+          type: number
+          example: 10
+        price:
+          type: number
+          example: 19.99
+    AddItemsRequest:
+      required:
+      - items
+      - tableId
+      type: object
+      properties:
+        tableId:
+          type: string
+        items:
+          type: array
+          items:
+            type: string
+    UpdateItemRequest:
+      required:
+      - itemId
+      - newItem
+      - tableId
+      type: object
+      properties:
+        itemId:
+          type: string
+          example: 60d5f2ab8f8a2c0015d1f9b3
+        tableId:
+          type: string
+          example: 60d5f2ab8f8a2c0015d1f9b4
+        newItem:
+          $ref: '#/components/schemas/Item'
+    TableResponse:
+      type: object
+      properties:
+        tableId:
+          type: string
+        title:
+          type: string
+        items:
+          type: array
+          items:
+            type: string
+    SaleItem:
+      type: object
+      properties:
+        tableId:
+          type: string
+          example: 60d5f2ab8f8a2c0015d1f9b3
+        itemId:
+          type: string
+          example: 60d5f2ab8f8a2c0015d1f9b3
+        quantity:
+          type: number
+          example: 2
+    SaleRequest:
+      required:
+      - saleItems
+      type: object
+      properties:
+        saleItems:
+          type: array
+          example:
+          - itemId: 60d5f2ab8f8a2c0015d1f9b3
+            quantity: 2
+            tableId: 60d5f2ab8f8a2c0015d1f9b3
+          items:
+            $ref: '#/components/schemas/SaleItem'
+    SalesResponse:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 66a9336acaf0c7e7aabf1ded
+        sales:
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesResponse_sales'
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    inline_response_200:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Sale updated successfully
+    SalesResponse_items:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 66a94375a833081728494c85
+        tableId:
+          type: string
+          example: 66a9364ada56457121f10954
+        itemId:
+          type: string
+          example: 66a936bfda56457121f10959
+        quantity:
+          type: number
+          example: 4
+        price:
+          type: number
+          example: 30
+    SalesResponse_sales:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 66a94375a833081728494c84
+        totalAmount:
+          type: number
+          example: 120
+        date:
+          type: string
+          format: date-time
+          example: 2024-07-30T19:48:05.617Z
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesResponse_items'

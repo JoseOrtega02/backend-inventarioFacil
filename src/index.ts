@@ -13,8 +13,9 @@ import helmet from "helmet";
 import { doubleCsrf } from "csrf-csrf";
 import cookieParser  from "cookie-parser"
 import morgan from "morgan"
+import swaggerUi from "swagger-ui-express"
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 const corsOptions={
   origin: 'http://example.com', 
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -56,6 +57,20 @@ const myRoute:RequestHandler = (req, res) => {
   // You could also pass the token into the context of a HTML response.
   res.json({ csrfToken });
 };
+import { fileURLToPath } from 'url';
+import path, { dirname } from 'path';
+import swaggerDocument from './documentation/JOSENEYTOR62-InventarioFacil-1.0.0-resolved.json'assert { type: 'json' };
+// Get the directory name of the current module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+  // Dynamically import the Swagger document
+
+  // Use Swagger UI middleware
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+
+
+app.use('/openapi', express.static(path.join(__dirname, './documentation/JOSENEYTOR62-InventarioFacil-1.0.0-resolved.json')));
 app.get("/csrf-token", myRoute)
 app.use(doubleCsrfProtection);
 app.use(limiter)
