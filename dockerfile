@@ -2,7 +2,7 @@
 FROM node:18
 
 # Establece el directorio de trabajo
-WORKDIR /app
+WORKDIR /
 
 # Copia los archivos de configuración de la aplicación
 COPY package.json pnpm-lock.yaml ./
