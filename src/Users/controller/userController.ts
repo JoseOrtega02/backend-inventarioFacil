@@ -97,7 +97,7 @@ export const login: RequestHandler<unknown, unknown, loginBody, unknown> = async
         }
 
         req.session.userId = user._id;
-        res.status(201).send({message:"Log in Succesfull"});
+        res.status(201).send({message:"Log in Succesfull,userId:" +user._id});
     } catch (error) {
         next(error);
     }
