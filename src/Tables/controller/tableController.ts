@@ -81,7 +81,9 @@ export const getTables:RequestHandler<unknown,unknown,getTablesBody,unknown>= as
     try {
         validateSchema(getTablesSchema,{userId:userId})
         const user= await verifyUser(userId)
-        const tables = user.tables
+        const tables = await tableModel.find({
+            _id:{$in:user.tables}
+        })
         res.status(200).json(tables)
     } catch (error) {
         next(error)
