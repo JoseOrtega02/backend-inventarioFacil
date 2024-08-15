@@ -45,33 +45,44 @@ interface deleteBody{
     userId:string
 }
 
-export const deleteTable:RequestHandler<unknown,unknown,deleteBody,unknown> =async (req,res,next) =>{
-    const tableId = req.body.tableId
-    const userId = req.session.userId
+export const deleteTable: RequestHandler<unknown, unknown, deleteBody, unknown> = async (req, res, next) => {
+    const tableId = req.body.tableId;
+    const userId = req.session.userId;
     const session = await mongoose.startSession();
-    session.startTransaction();
+    
     try {
-        validateSchema(deleteTableSchema,{tableId:tableId,userId:userId})
-        const user =  await verifyUser(userId)
-        const table =await tableModel.findById(tableId).session(session).exec()
-        if(!table){
-            throw createHttpError(404,"table not found")
+        session.startTransaction();
+        
+        validateSchema(deleteTableSchema, { tableId: tableId, userId: userId });
+
+        const user = await verifyUser(userId);
+        const table = await tableModel.findById(tableId).session(session).exec();
+
+        if (!table) {
+            throw createHttpError(404, "Table not found");
         }
-        user.tables.splice(user.tables.findIndex((id)=>{
-            return id === table._id
-        }))
-        table.deleteOne().session(session).exec()
-        user.save({session})
-        table.save({session})
+
+        // Remove the table from the user's list
+        const tableIndex = user.tables.findIndex((id) => id.equals(table._id));
+        if (tableIndex > -1) {
+            user.tables.splice(tableIndex, 1);
+        } else {
+            throw createHttpError(404, "Table not associated with user");
+        }
+
+        // Remove the table and save the user
+        await table.deleteOne({ session }).exec();
+        await user.save({ session });
+
         await session.commitTransaction();
-        session.endSession();
-        res.status(200).send({message:"table deleted succesfully"})
+        res.status(200).send({ message: "Table deleted successfully" });
     } catch (error) {
         await session.abortTransaction();
+        next(error);
+    } finally {
         session.endSession();
-        next(error)
     }
-}
+};
 interface getTablesBody{
     userId: string
 }
