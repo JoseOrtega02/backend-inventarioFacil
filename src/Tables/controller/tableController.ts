@@ -65,7 +65,7 @@ export const deleteTable:RequestHandler<unknown,unknown,deleteBody,unknown> =asy
         table.save({session})
         await session.commitTransaction();
         session.endSession();
-        res.status(200).send("table deleted succesfully")
+        res.status(200).send({message:"table deleted succesfully"})
     } catch (error) {
         await session.abortTransaction();
         session.endSession();
