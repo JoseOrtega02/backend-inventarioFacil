@@ -37,6 +37,8 @@ export const createTable:RequestHandler<unknown,unknown,createTableBody,unknown>
         await session.abortTransaction();
         session.endSession();
         next(error)
+    }finally {
+        session.endSession();
     }
 }
 

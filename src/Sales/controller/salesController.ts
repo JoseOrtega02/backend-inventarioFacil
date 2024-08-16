@@ -30,6 +30,8 @@ export const postSale:RequestHandler = async (req,res,next) =>{
         await session.abortTransaction();
         session.endSession();
         next(error)
+    }finally {
+        session.endSession();
     }
 }
 interface getSaleBody{
