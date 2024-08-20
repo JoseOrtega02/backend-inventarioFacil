@@ -90,11 +90,11 @@ interface RequestParams {
   id: string
 }
 
-export const getItems: RequestHandler<RequestParams, unknown, getItemsBody, unknown> = async (req, res, next) => {
+export const getItems: RequestHandler<RequestParams, unknown, unknown, unknown> = async (req, res, next) => {
   const params = req.params
   const tableId = params.id
   try {
-    validateSchema(getItemSchema, req.body)
+    //validateSchema(getItemSchema, req.body)
     const table = await tableModel.findById(tableId).exec()
     if (!table) {
       throw createHttpError(404, "Table not found")
