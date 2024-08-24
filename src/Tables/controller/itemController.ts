@@ -45,7 +45,7 @@ export const removeItem: RequestHandler<unknown, unknown, removeItemBody, unknow
     }
     table.items.splice(table.items.findIndex((item) => { return item._id?.equals(objectId) }))
     await table.save()
-    res.status(200).send("Item removed succesfully")
+    res.status(200).send({ message: "Item removed succesfully" })
   } catch (error) {
     next(error)
   }
@@ -78,7 +78,7 @@ export const updateItem: RequestHandler<unknown, unknown, updateItemBody, unknow
     if (result.modifiedCount === 0) {
       throw createHttpError(404, "item not found or not modified");
     }
-    res.status(201).send("Item UpDATED SUCESSFULLY")
+    res.status(201).send({ message: "Item UpDATED SUCESSFULLY" })
   } catch (error) {
     next(error)
   }
