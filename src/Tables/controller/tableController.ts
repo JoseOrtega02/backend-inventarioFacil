@@ -46,7 +46,7 @@ interface deleteParams {
   tableId: string,
 }
 export const deleteTable: RequestHandler<deleteParams, unknown, unknown, unknown> = async (req, res, next) => {
-  const tableId = req.params;
+  const tableId = req.params.tableId;
   const userId = req.session.userId;
   const session = await mongoose.startSession();
 
