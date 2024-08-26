@@ -27,7 +27,7 @@ export const logout: RequestHandler = (req, res, next) => {
     if (error) {
       next(error);
     } else {
-      res.sendStatus(200);
+      res.sendStatus(200).send({ message: "log out Succesfull" });
     }
   });
 };
