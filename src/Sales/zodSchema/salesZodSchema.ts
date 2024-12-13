@@ -3,6 +3,7 @@ const objectIdRegex = /^[a-fA-F0-9]{24}$/;
 const itemSchemaSale = z.object({
   tableId: z.string().regex(objectIdRegex),
   itemId: z.string().regex(objectIdRegex),
+  name: z.string().min(1,{message:"must not be empty"}).max(30,{message:"must be lower than 30 characters"}),
   quantity: z.number().int().positive()
 })
 export const postSaleSchema = z.object({

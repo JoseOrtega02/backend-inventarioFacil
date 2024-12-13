@@ -17,7 +17,7 @@ import swaggerUi from "swagger-ui-express"
 const app = express();
 const PORT = process.env.PORT || 3000;
 const corsOptions={
-  origin: 'http://localhost:5173', 
+  origin: ['http://localhost:5173',"https://inventariofacil.netlify.app"], 
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials:true
 }
