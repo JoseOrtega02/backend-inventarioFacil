@@ -55,6 +55,7 @@ export const saveSale = async (ownerId: mongoose.Types.ObjectId | undefined, sal
         const item = await getItem(itemId,table)
         const itemSave = {
             itemId: itemId,
+            name:item.name,
             tableId: tableId,
             quantity: quantity,
             price: item.price

@@ -6,6 +6,7 @@ const saleSchema = new mongoose.Schema({
             tableId: { type: mongoose.Schema.Types.ObjectId, required: true },
             itemId: { type: mongoose.Schema.Types.ObjectId, required: true },
             quantity: { type: Number, required: true },
+            name: {type:String,required:true},
             price: { type: Number, required: true }
         }
     ],
